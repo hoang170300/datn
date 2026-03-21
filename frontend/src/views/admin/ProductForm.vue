@@ -97,9 +97,9 @@
               <div class="col-md-4">
                 <label class="form-label small fw-semibold">Loại sản phẩm <span class="text-danger">*</span></label>
                 <select class="form-select" v-model="form.productType">
-                  <option value="SALE">🛍️ Chỉ bán</option>
-                  <option value="RENTAL">📅 Chỉ cho thuê</option>
-                  <option value="BOTH">🔄 Vừa bán vừa cho thuê</option>
+                  <option value="SALE"> Chỉ bán</option>
+                  <option value="RENTAL"> Chỉ cho thuê</option>
+                  <option value="BOTH"> Vừa bán vừa cho thuê</option>
                 </select>
               </div>
             </div>
@@ -316,7 +316,7 @@
                 <span v-if="form.isHot" class="badge" style="background:#ff4757;font-size:0.65rem;">🔥 Hot</span>
                 <span v-if="form.isNew" class="badge bg-success" style="font-size:0.65rem;">✨ Mới</span>
                 <span class="badge text-bg-light text-dark" style="font-size:0.65rem;">
-                  {{ { SALE: '🛍️ Bán', RENTAL: '📅 Thuê', BOTH: '🔄 Cả hai' }[form.productType] }}
+                  {{ { SALE: ' Bán', RENTAL: ' Thuê', BOTH: ' Cả hai' }[form.productType] }}
                 </span>
               </div>
             </div>
@@ -343,7 +343,7 @@
         <!-- SEO / Ghi chú nội bộ -->
         <div class="card border-0 shadow-sm" style="border-radius:16px;">
           <div class="card-body p-4">
-            <h6 class="fw-bold mb-3">📌 Ghi chú nội bộ</h6>
+            <h6 class="fw-bold mb-3"> Ghi chú nội bộ</h6>
             <textarea class="form-control form-control-sm" v-model="form.adminNote"
               rows="3" placeholder="Ghi chú nội bộ, không hiển thị với khách hàng..."></textarea>
           </div>
@@ -449,6 +449,7 @@ const buildPayload = () => ({
   isHot: form.isHot,
   isNew: form.isNew,
   variants: form.variants.map(v => ({
+    id:             v.id || null,   // ← quan trọng: gửi id để backend merge
     size: v.size.trim(),
     color: v.color || null,
     stockQuantity: Number(v.stockQuantity) || 0,
@@ -466,10 +467,10 @@ const save = async () => {
     const payload = buildPayload()
     if (isEdit.value) {
       await productApi.admin.updateProduct(route.params.id, payload)
-      toast.success('Cập nhật sản phẩm thành công! ✅')
+      toast.success('Cập nhật sản phẩm thành công! ')
     } else {
       await productApi.admin.createProduct(payload)
-      toast.success('Tạo sản phẩm thành công! 🎉')
+      toast.success('Tạo sản phẩm thành công! ')
     }
     router.push('/admin/products')
   } catch (e) {
@@ -490,42 +491,41 @@ onMounted(async () => {
     seriesList.value = sRes.data.data || []
   } catch (e) {}
 
-  // Load product data if edit mode
+  // Load product data if edit mode — dùng getProductById để có đủ variants
   if (isEdit.value) {
     try {
-      // Search for product by id via admin endpoint
-      const res = await productApi.admin.getProducts({ page: 0, size: 1, id: route.params.id })
-      // Alternatively fetch by slug – backend dependent; using basic get
-      const allRes = await productApi.admin.getProducts({ size: 1000 })
-      const found = allRes.data.data?.content?.find(p => p.id == route.params.id)
+      const res = await productApi.admin.getProductById(route.params.id)
+      const found = res.data.data
       if (found) {
         Object.assign(form, {
-          name: found.name || '',
-          slug: found.slug || '',
-          characterName: found.characterName || '',
-          description: found.description || '',
-          categoryId: found.categoryId || '',
-          seriesId: found.seriesId || '',
-          productType: found.productType || 'SALE',
-          salePrice: found.salePrice || null,
+          name:              found.name              || '',
+          slug:              found.slug              || '',
+          characterName:     found.characterName     || '',
+          description:       found.description       || '',
+          categoryId:        found.categoryId        || '',
+          seriesId:          found.seriesId          || '',
+          productType:       found.productType       || 'SALE',
+          salePrice:         found.salePrice         || null,
           rentalPricePerDay: found.rentalPricePerDay || null,
-          depositAmount: found.depositAmount || null,
-          isActive: found.isActive ?? true,
-          isHot: found.isHot ?? false,
-          isNew: found.isNew ?? false,
+          depositAmount:     found.depositAmount     || null,
+          isActive:          found.isActive  ?? true,
+          isHot:             found.isHot     ?? false,
+          isNew:             found.isNew     ?? false,
+          // ← Load đầy đủ variants kèm id để merge khi update
           variants: (found.variants || []).map(v => ({
-            id: v.id,
-            size: v.size || '',
-            color: v.color || '',
-            stockQuantity: v.stockQuantity || 0,
+            id:             v.id,
+            size:           v.size           || '',
+            color:          v.color          || '',
+            stockQuantity:  v.stockQuantity  || 0,
             rentalQuantity: v.rentalQuantity || 0,
-            price: v.price || null
+            price:          v.price          || null
           })),
-          images: found.images?.map(i => i.imageUrl) || (found.primaryImageUrl ? [found.primaryImageUrl] : [''])
+          images: found.images?.map(i => i.imageUrl)
+                  || (found.primaryImageUrl ? [found.primaryImageUrl] : [''])
         })
       }
     } catch (e) {
-      toast.error('Không thể tải thông tin sản phẩm')
+      toast.error('Không thể tải thông tin sản phẩm: ' + (e.response?.data?.message || e.message))
     }
   }
 })

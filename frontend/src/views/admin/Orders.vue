@@ -61,7 +61,7 @@
                         <span class="badge py-0 px-1"
                           :class="item.itemType==='RENTAL' ? 'bg-info text-dark' : 'bg-secondary'"
                           style="font-size:0.6rem;">
-                          {{ item.itemType==='RENTAL' ? '📅 Thuê' : '🛍️ Mua' }}
+                          {{ item.itemType==='RENTAL' ? ' Thuê' : ' Mua' }}
                         </span>
                       </div>
                       <!-- Size, màu, số lượng -->
@@ -98,7 +98,9 @@
                       : order.paymentStatus==='PENDING' ? 'bg-warning text-dark' : 'bg-danger'">
                     {{ paymentLabel(order.paymentStatus) }}
                   </span>
-                  <div class="small text-muted mt-1" style="font-size:0.7rem;">{{ order.paymentMethod }}</div>
+                  <div class="small text-muted mt-1" style="font-size:0.7rem;">
+                    {{ {'COD':'💵 Tiền mặt','BANK_TRANSFER':'🏦 CK nhận hàng','BANK_TRANSFER_PREPAID':'💳 CK trước','E_WALLET':'📱 Ví sandbox'}[order.paymentMethod] || order.paymentMethod }}
+                  </div>
                 </td>
                 <td>
                   <span class="badge rounded-pill small"
@@ -110,15 +112,34 @@
                 <td class="pe-4 text-center">
                   <div class="d-flex gap-1 justify-content-center flex-wrap">
  
-                    <!-- PENDING → Xác nhận thanh toán -->
-                    <button v-if="order.status==='PENDING'"
+                    <!--
+                      LUỒNG MỚI theo phương thức thanh toán:
+                      - E_WALLET (sandbox):  PAID ngay → bỏ bước "Xác nhận TT" → Chuẩn bị → Giao → Done
+                      - COD (tiền mặt):      PENDING  → bỏ bước "Xác nhận TT" → Chuẩn bị → Giao → Done (shipper thu)
+                      - BANK_TRANSFER:       PENDING  → bỏ bước "Xác nhận TT" → Chuẩn bị → Giao → Done (shipper thu hộ)
+                      → Chỉ giữ bước "Xác nhận TT" cho các đơn CHUYỂN KHOẢN TRƯỚC (BANK_TRANSFER_PREPAID)
+                         vì cần admin check tài khoản xem đã nhận tiền chưa
+                    -->
+ 
+                    <!-- PENDING + BANK_TRANSFER_PREPAID → CẦN xác nhận TT (phải check TK) -->
+                    <button
+                      v-if="order.status==='PENDING' && order.paymentMethod==='BANK_TRANSFER_PREPAID'"
                       class="btn btn-sm rounded-pill text-white"
                       style="background:#17a2b8;font-size:0.75rem;"
                       @click="doAction(order,'CONFIRMED')">
                       <i class="bi bi-check-circle me-1"></i>Xác nhận TT
                     </button>
  
-                    <!-- CONFIRMED → Chuẩn bị hàng -->
+                    <!-- PENDING + COD/BANK_TRANSFER/E_WALLET → KHÔNG cần xác nhận TT, chuyển thẳng Chuẩn bị -->
+                    <button
+                      v-if="order.status==='PENDING' && order.paymentMethod!=='BANK_TRANSFER_PREPAID'"
+                      class="btn btn-sm rounded-pill text-white"
+                      style="background:#6f42c1;font-size:0.75rem;"
+                      @click="doAction(order,'PROCESSING')">
+                      <i class="bi bi-box-seam me-1"></i>Chuẩn bị hàng
+                    </button>
+ 
+                    <!-- CONFIRMED (chỉ BANK_TRANSFER_PREPAID mới có bước này) → Chuẩn bị -->
                     <button v-if="order.status==='CONFIRMED'"
                       class="btn btn-sm rounded-pill text-white"
                       style="background:#6f42c1;font-size:0.75rem;"
@@ -134,23 +155,22 @@
                       <i class="bi bi-truck me-1"></i>Giao hàng
                     </button>
  
-                    <!-- SHIPPING → Hoàn thành (admin mark nếu user chưa confirm) -->
+                    <!-- SHIPPING → Hoàn thành -->
                     <button v-if="order.status==='SHIPPING'"
                       class="btn btn-sm rounded-pill text-white"
                       style="background:#28a745;font-size:0.75rem;"
                       @click="doAction(order,'DELIVERED')">
-                      <i class="bi bi-check2-all me-1"></i>Hoàn thành
+                      <i class="bi bi-check2-all me-1"></i>Đã giao
                     </button>
  
-                    <!-- Hủy đơn (chỉ khi PENDING hoặc CONFIRMED) -->
-                    <button v-if="['PENDING','CONFIRMED'].includes(order.status)"
+                    <!-- Hủy đơn -->
+                    <button v-if="['PENDING','CONFIRMED','PROCESSING'].includes(order.status)"
                       class="btn btn-sm btn-outline-danger rounded-pill"
                       style="font-size:0.75rem;"
                       @click="doAction(order,'CANCELLED')">
                       <i class="bi bi-x-circle me-1"></i>Hủy
                     </button>
  
-                    <!-- Đã giao / Đã hủy — chỉ hiện badge -->
                     <span v-if="['DELIVERED','CANCELLED','RETURNED'].includes(order.status)"
                       class="text-muted small">—</span>
                   </div>
@@ -244,11 +264,21 @@ const statusFilters = [
 ]
  
 const actionConfig = {
-  CONFIRMED:  { icon:'✅', title:'Xác nhận thanh toán?',  desc:'Đơn hàng sẽ chuyển sang "Đã xác nhận". Xác nhận khi đã nhận được tiền từ khách.',  color:'#17a2b8' },
-  PROCESSING: { icon:'📦', title:'Chuẩn bị hàng?',       desc:'Đơn hàng sẽ chuyển sang "Đang xử lý". Bắt đầu đóng gói và chuẩn bị giao.',          color:'#6f42c1' },
-  SHIPPING:   { icon:'🚚', title:'Xác nhận giao hàng?',  desc:'Đơn hàng sẽ chuyển sang "Đang giao". Khách hàng sẽ nhận được thông báo.',             color:'#007bff' },
-  DELIVERED:  { icon:'🎉', title:'Hoàn thành đơn hàng?', desc:'Đánh dấu đơn đã giao thành công. Dùng khi khách chưa tự xác nhận.',                   color:'#28a745' },
-  CANCELLED:  { icon:'❌', title:'Hủy đơn hàng?',        desc:'Hành động này không thể hoàn tác. Hàng sẽ được hoàn lại kho.',                         color:'#dc3545' }
+  CONFIRMED:  { icon:'✅', title:'Xác nhận đã nhận tiền?',
+    desc:'Chỉ dùng cho đơn Chuyển khoản trước. Kiểm tra tài khoản ngân hàng trước khi xác nhận.',
+    color:'#17a2b8' },
+  PROCESSING: { icon:'📦', title:'Bắt đầu chuẩn bị hàng?',
+    desc:'Đơn chuyển sang "Đang chuẩn bị". Tiến hành đóng gói và chuẩn bị giao cho shipper.',
+    color:'#6f42c1' },
+  SHIPPING:   { icon:'🚚', title:'Xác nhận giao hàng?',
+    desc:'Đơn chuyển sang "Đang giao". Khách nhận thông báo. Shipper sẽ thu tiền khi giao (COD/CK).',
+    color:'#007bff' },
+  DELIVERED:  { icon:'🎉', title:'Xác nhận đã giao thành công?',
+    desc:'Đánh dấu đã giao. Với COD/CK shipper thu hộ: tiền đã thu được khi giao.',
+    color:'#28a745' },
+  CANCELLED:  { icon:'❌', title:'Hủy đơn hàng?',
+    desc:'Hành động này không thể hoàn tác. Tồn kho sẽ được hoàn lại tự động.',
+    color:'#dc3545' }
 }
  
 const statusLabel  = (s) => ({ PENDING:'Chờ xác nhận',CONFIRMED:'Đã xác nhận',PROCESSING:'Đang xử lý',SHIPPING:'Đang giao',DELIVERED:'Đã giao',CANCELLED:'Đã hủy',RETURNED:'Hoàn trả' }[s]||s)

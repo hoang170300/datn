@@ -273,7 +273,7 @@ const saveBanner = async () => {
       toast.success('Đã cập nhật banner')
     } else {
       await api.post('/admin/banners', payload)
-      toast.success('Đã tạo banner mới 🖼️')
+      toast.success('Đã tạo banner mới ')
     }
     closeModal()
     fetchBanners()

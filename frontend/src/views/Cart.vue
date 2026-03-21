@@ -1,7 +1,7 @@
 <template>
   <div class="container py-5">
     <h3 class="fw-bold mb-4"><i class="bi bi-cart3 me-2"></i>Giỏ hàng của bạn</h3>
- 
+
     <!-- Empty Cart -->
     <div v-if="!cartStore.items.length" class="text-center py-5">
       <div style="font-size:5rem;">🛒</div>
@@ -12,7 +12,7 @@
         Khám phá sản phẩm <i class="bi bi-arrow-right ms-1"></i>
       </router-link>
     </div>
- 
+
     <!-- Cart Content -->
     <div v-else class="row g-4">
       <div class="col-lg-8">
@@ -38,7 +38,7 @@
                     <span v-if="item.color" class="me-3">Màu: <strong>{{ item.color }}</strong></span>
                     <span class="badge"
                       :style="item.orderType === 'RENTAL' ? 'background:#17a2b8' : 'background:#e91e8c'">
-                      {{ item.orderType === 'RENTAL' ? '📅 Thuê' : '🛍️ Mua' }}
+                      {{ item.orderType === 'RENTAL' ? ' Thuê' : '🛍️ Mua' }}
                     </span>
                   </div>
                   <div v-if="item.orderType === 'RENTAL'" class="small text-info mt-1">
@@ -78,25 +78,16 @@
           <i class="bi bi-trash me-1"></i>Xóa toàn bộ giỏ hàng
         </button>
       </div>
- 
+
       <!-- Summary -->
       <div class="col-lg-4">
         <div class="card border-0 shadow-sm sticky-top" style="top:80px;border-radius:16px;">
           <div class="card-body p-4">
             <h6 class="fw-bold mb-4">Tóm tắt đơn hàng</h6>
- 
+
             <div class="d-flex justify-content-between mb-2">
               <span class="text-muted">Tạm tính ({{ cartStore.totalItems }} sản phẩm)</span>
               <span>{{ formatPrice(cartStore.totalPrice) }}</span>
-            </div>
-            <div v-if="cartStore.totalDeposit > 0" class="d-flex justify-content-between mb-2">
-              <span class="text-warning fw-semibold">
-                <i class="bi bi-shield-lock me-1"></i>Tiền đặt cọc thuê
-              </span>
-              <span class="text-warning fw-semibold">{{ formatPrice(cartStore.totalDeposit) }}</span>
-            </div>
-            <div v-if="cartStore.totalDeposit > 0" class="mb-2 px-1" style="font-size:0.75rem;color:#856404;background:#fff3cd;border-radius:6px;padding:6px 8px;">
-              <i class="bi bi-info-circle me-1"></i>Tiền cọc hoàn lại sau khi trả đồ nguyên vẹn
             </div>
             <div class="d-flex justify-content-between mb-2">
               <span class="text-muted">Phí vận chuyển</span>
@@ -105,9 +96,9 @@
             <hr>
             <div class="d-flex justify-content-between fw-bold mb-4">
               <span>Tổng cộng</span>
-              <span style="color:#e91e8c;font-size:1.2rem;">{{ formatPrice(cartStore.grandTotal) }}</span>
+              <span style="color:#e91e8c;font-size:1.2rem;">{{ formatPrice(cartStore.totalPrice) }}</span>
             </div>
- 
+
             <router-link to="/checkout" class="btn w-100 py-3 fw-bold"
               style="background:#e91e8c;color:#fff;border-radius:12px;">
               Tiến hành thanh toán <i class="bi bi-arrow-right ms-1"></i>
@@ -121,17 +112,17 @@
     </div>
   </div>
 </template>
- 
+
 <script setup>
 import { onMounted } from 'vue'
 import { useCartStore } from '@/store/cart'
 import { useToast } from 'vue-toastification'
- 
+
 const cartStore = useCartStore()
 const toast = useToast()
- 
+
 const formatPrice = (p) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(p)
- 
+
 const updateQty = async (itemId, quantity) => {
   try {
     await cartStore.updateQuantity(itemId, quantity)
@@ -139,7 +130,7 @@ const updateQty = async (itemId, quantity) => {
     toast.error('Có lỗi xảy ra')
   }
 }
- 
+
 const removeItem = async (itemId) => {
   try {
     await cartStore.removeItem(itemId)
@@ -148,13 +139,13 @@ const removeItem = async (itemId) => {
     toast.error('Có lỗi xảy ra')
   }
 }
- 
+
 const clearCart = async () => {
   if (confirm('Xóa toàn bộ giỏ hàng?')) {
     await cartStore.clearCart()
     toast.info('Đã xóa giỏ hàng')
   }
 }
- 
+
 onMounted(() => cartStore.fetchCart())
 </script>

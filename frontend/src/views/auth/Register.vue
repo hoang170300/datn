@@ -6,7 +6,7 @@
         <div class="col-md-6">
           <div class="text-center mb-4">
             <router-link to="/" class="text-decoration-none">
-              <h2 style="color:#e91e8c;font-weight:900;">⭐ CosPlay Shop</h2>
+              <h2 style="color:#e91e8c;font-weight:900;">OtakuCosPlay</h2>
             </router-link>
           </div>
           <div class="card border-0 shadow-lg" style="border-radius:20px;">

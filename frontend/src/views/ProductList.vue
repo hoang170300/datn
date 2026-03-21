@@ -5,7 +5,7 @@
       <div class="col-lg-3">
         <div class="card border-0 sticky-top" style="top:80px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
           <div class="card-body p-4">
-            <h6 class="fw-bold mb-3">🔍 Bộ lọc tìm kiếm</h6>
+            <h6 class="fw-bold mb-3"> Bộ lọc tìm kiếm</h6>
 
             <!-- Category -->
             <div class="mb-4">
@@ -115,7 +115,6 @@
 
         <!-- Empty state -->
         <div v-else class="text-center py-5">
-          <div style="font-size:4rem;">🔍</div>
           <h5 class="text-muted mt-3">Không tìm thấy sản phẩm nào</h5>
           <p class="text-muted">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
           <button class="btn btn-outline-secondary rounded-pill" @click="resetFilter">Xóa bộ lọc</button>

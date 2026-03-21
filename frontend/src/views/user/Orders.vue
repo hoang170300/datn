@@ -19,7 +19,7 @@
         </div>
  
         <div v-else-if="!orders.length" class="text-center py-5">
-          <div style="font-size:4rem;">📦</div>
+        
           <h6 class="text-muted mt-3">Chưa có đơn hàng nào</h6>
           <router-link to="/products" class="btn rounded-pill mt-2"
             style="background:#e91e8c;color:#fff;">Mua sắm ngay</router-link>
@@ -44,7 +44,8 @@
                   {{ statusLabel(order.status) }}
                 </span>
                 <span class="badge"
-                  :class="order.paymentStatus==='PAID' ? 'bg-success' : 'bg-warning text-dark'">
+                  :class="order.paymentStatus==='PAID' ? 'bg-success' :
+                           order.paymentStatus==='REFUNDED' ? 'bg-info' : 'bg-warning text-dark'">
                   {{ paymentLabel(order.paymentStatus) }}
                 </span>
               </div>
@@ -91,7 +92,7 @@
                   <div class="small fw-semibold">{{ item.productName }}</div>
                   <small class="text-muted">
                     x{{ item.quantity }} ·
-                    {{ item.itemType==='RENTAL' ? '📅 Thuê' : '🛍️ Mua' }}
+                    {{ item.itemType==='RENTAL' ? ' Thuê' : ' Mua' }}
                   </small>
                 </div>
               </div>

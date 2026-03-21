@@ -17,7 +17,7 @@
           <div style="font-size:1.4rem;font-weight:900;
                       background:linear-gradient(135deg,#e91e8c,#ff6bcb);
                       -webkit-background-clip:text;-webkit-text-fill-color:transparent;">
-            ⭐ CosPlay
+            OtakuCosPlay
           </div>
           <div class="mt-1" style="color:#7c8db0;font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;">
             Admin Panel

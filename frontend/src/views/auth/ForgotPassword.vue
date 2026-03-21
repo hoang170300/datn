@@ -6,7 +6,7 @@
         <div class="col-md-5">
           <div class="text-center mb-4">
             <router-link to="/" class="text-decoration-none">
-              <h2 style="color:#e91e8c;font-weight:900;">⭐ CosPlay Shop</h2>
+              <h2 style="color:#e91e8c;font-weight:900;">OtakuCosPlay</h2>
             </router-link>
           </div>
           <div class="card border-0 shadow-lg" style="border-radius:20px;">
@@ -38,7 +38,6 @@
               </div>
 
               <div v-else class="text-center">
-                <div style="font-size:4rem;">📧</div>
                 <h5 class="fw-bold mt-3 mb-2">Kiểm tra email của bạn!</h5>
                 <p class="text-muted">Link đặt lại mật khẩu đã được gửi đến <strong>{{ email }}</strong></p>
                 <p class="text-muted small">Kiểm tra cả hộp thư spam nếu không thấy email.</p>

@@ -58,6 +58,7 @@
                 <th class="py-3 small text-muted text-uppercase">Loại</th>
                 <th class="py-3 small text-muted text-uppercase">Giá bán</th>
                 <th class="py-3 small text-muted text-uppercase">Giá thuê/ngày</th>
+                <th class="py-3 small text-muted text-uppercase">Tồn kho</th>
                 <th class="py-3 small text-muted text-uppercase">Đánh giá</th>
                 <th class="py-3 small text-muted text-uppercase">Trạng thái</th>
                 <th class="pe-4 py-3 small text-muted text-uppercase text-end">Thao tác</th>
@@ -100,6 +101,30 @@
                 <td class="small text-info">
                   {{ product.rentalPricePerDay ? formatPrice(product.rentalPricePerDay) : '—' }}
                 </td>
+                <!-- Tồn kho -->
+                <td>
+                  <div v-if="product.variants && product.variants.length" class="d-flex flex-column gap-1">
+                    <div v-for="v in product.variants.filter(v => v.isActive !== false).slice(0,3)" :key="v.id"
+                      class="d-flex align-items-center gap-1">
+                      <span class="badge rounded-pill px-2"
+                        style="font-size:0.6rem;background:#e91e8c22;color:#e91e8c;font-weight:600;">
+                        {{ v.size }}
+                      </span>
+                      <span :class="['small fw-semibold', v.stockQuantity <= 2 ? 'text-danger' : 'text-dark']"
+                        style="font-size:0.75rem;">
+                        {{ v.stockQuantity }}
+                      </span>
+                      <span v-if="product.productType !== 'SALE'"
+                        class="text-muted" style="font-size:0.68rem;">(T:{{ v.rentalQuantity }})</span>
+                    </div>
+                    <div v-if="product.variants.filter(v => v.isActive !== false).length > 3"
+                      class="text-muted" style="font-size:0.68rem;">
+                      +{{ product.variants.filter(v => v.isActive !== false).length - 3 }} size khác
+                    </div>
+                  </div>
+                  <span v-else class="text-muted small">—</span>
+                </td>
+                <!-- Đánh giá -->
                 <td>
                   <div class="d-flex align-items-center gap-1">
                     <i class="bi bi-star-fill text-warning small"></i>

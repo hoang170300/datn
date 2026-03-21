@@ -2,7 +2,7 @@
     <div>
       <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-          <h5 class="fw-bold mb-1">📅 Quản lý thuê đồ</h5>
+          <h5 class="fw-bold mb-1"> Quản lý thuê đồ</h5>
           <p class="text-muted small mb-0">Theo dõi tình trạng thuê và nhắc trả đồ</p>
         </div>
       </div>
@@ -11,21 +11,20 @@
       <div class="row g-3 mb-4">
         <div class="col-4">
           <div class="card border-0 shadow-sm text-center p-3" style="border-radius:12px;">
-            <div class="fs-2">📦</div>
+            
             <div class="fw-bold fs-4 text-primary">{{ activeRentals.length }}</div>
             <div class="small text-muted">Đang thuê</div>
           </div>
         </div>
         <div class="col-4">
           <div class="card border-0 shadow-sm text-center p-3" style="border-radius:12px;border:2px solid #ffc107!important;">
-            <div class="fs-2">⏰</div>
+            
             <div class="fw-bold fs-4 text-warning">{{ dueSoonRentals.length }}</div>
             <div class="small text-muted">Sắp hết hạn (≤2 ngày)</div>
           </div>
         </div>
         <div class="col-4">
           <div class="card border-0 shadow-sm text-center p-3" style="border-radius:12px;border:2px solid #dc3545!important;">
-            <div class="fs-2">🚨</div>
             <div class="fw-bold fs-4 text-danger">{{ overdueRentals.length }}</div>
             <div class="small text-muted">Quá hạn</div>
           </div>

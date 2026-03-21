@@ -77,14 +77,18 @@ public class PosService {
 
         String orderNumber = "POS" + System.currentTimeMillis();
 
+        // Tại quầy: thu tiền trực tiếp → PAID ngay, giao hàng luôn → DELIVERED
+        Order.PaymentMethod posPayMethod = req.getPaymentMethod() != null
+                ? Order.PaymentMethod.valueOf(
+                "CASH".equals(req.getPaymentMethod()) ? "COD" : req.getPaymentMethod())
+                : Order.PaymentMethod.COD;
+
         Order order = Order.builder()
                 .orderNumber(orderNumber)
                 .user(user)
-                .status(Order.OrderStatus.CONFIRMED) // Offline: xác nhận ngay
-                .paymentMethod(req.getPaymentMethod() != null
-                        ? Order.PaymentMethod.valueOf(req.getPaymentMethod())
-                        : Order.PaymentMethod.COD)
-                .paymentStatus(Order.PaymentStatus.PENDING)
+                .status(Order.OrderStatus.DELIVERED) // Tại quầy: giao hàng trực tiếp luôn
+                .paymentMethod(posPayMethod)
+                .paymentStatus(Order.PaymentStatus.PAID) // Tại quầy: thu tiền ngay
                 .shippingFee(BigDecimal.ZERO) // Offline: không ship
                 .phone(req.getCustomerPhone())
                 .note(req.getNote() != null ? req.getNote() : "Đơn offline tại cửa hàng"

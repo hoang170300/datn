@@ -39,7 +39,7 @@
         <div class="card border-0 shadow-sm mb-4" style="border-radius:16px;">
           <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
-              <h6 class="fw-bold mb-0">📈 Doanh thu 7 ngày gần nhất</h6>
+              <h6 class="fw-bold mb-0">Doanh thu 7 ngày gần nhất</h6>
               <div class="d-flex gap-2 small">
                 <span class="badge" style="background:#e91e8c22;color:#e91e8c;">Online</span>
                 <span class="badge" style="background:#28a74522;color:#28a745;">Offline</span>
@@ -230,10 +230,10 @@ const stats = ref([
 ])
 
 const todayStats = ref([
-  { label:'Đơn hôm nay',    value:'0',   icon:'📋', color:'#007bff' },
-  { label:'Doanh thu hôm nay', value:'—', icon:'💰', color:'#28a745' },
-  { label:'Đơn thuê',        value:'0',  icon:'📅', color:'#17a2b8' },
-  { label:'Chờ xác nhận',    value:'0',  icon:'⏳', color:'#ffc107' }
+  { label:'Đơn hôm nay',    value:'0',   color:'#007bff' },
+  { label:'Doanh thu hôm nay', value:'—',  color:'#28a745' },
+  { label:'Đơn thuê',        value:'0',  color:'#17a2b8' },
+  { label:'Chờ xác nhận',    value:'0',   color:'#ffc107' }
 ])
 
 const formatPrice = (p) => p!=null

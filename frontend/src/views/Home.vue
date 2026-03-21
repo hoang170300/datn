@@ -59,7 +59,7 @@
       style="background: linear-gradient(135deg, #ff4757, #e91e8c);">
       <div class="container d-flex align-items-center justify-content-between flex-wrap gap-3">
         <div class="text-white">
-          <h4 class="mb-1 fw-bold">⚡ FLASH SALE đang diễn ra!</h4>
+          <h4 class="mb-1 fw-bold"> FLASH SALE đang diễn ra!</h4>
           <p class="mb-0 opacity-75">Ưu đãi khủng - Số lượng có hạn!</p>
         </div>
         <router-link to="/flash-sale" class="btn btn-light fw-bold rounded-pill px-4">
@@ -72,7 +72,7 @@
     <section class="container py-5">
       <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-          <h3 class="fw-bold mb-1">🔥 Sản phẩm nổi bật</h3>
+          <h3 class="fw-bold mb-1"> Sản phẩm nổi bật</h3>
           <p class="text-muted mb-0">Được yêu thích nhất</p>
         </div>
         <router-link to="/products?sortBy=isHot&sortDir=desc" class="btn btn-outline-danger rounded-pill">
@@ -125,7 +125,7 @@
     <section class="container py-5">
       <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-          <h3 class="fw-bold mb-1">✨ Hàng mới về</h3>
+          <h3 class="fw-bold mb-1">Hàng mới về</h3>
           <p class="text-muted mb-0">Cập nhật liên tục</p>
         </div>
         <router-link to="/products?sortBy=createdAt&sortDir=desc" class="btn btn-outline-secondary rounded-pill">
@@ -140,17 +140,17 @@
       </div>
     </section>
 
-    <!-- Combo Section -->
+    <!-- Combo Section
     <section style="background: linear-gradient(135deg, #1a1a2e, #16213e);" class="py-5">
       <div class="container text-center text-white">
-        <h3 class="fw-bold mb-2">👗 Combo Cosplay Full Set</h3>
+        <h3 class="fw-bold mb-2"> Combo Cosplay Full Set</h3>
         <p class="opacity-75 mb-4">Trang phục + Tóc giả + Phụ kiện - Tiết kiệm hơn mua lẻ!</p>
         <router-link to="/combos" class="btn btn-lg rounded-pill px-5"
           style="background:#e91e8c;color:#fff;border:none;">
           <i class="bi bi-bag-heart me-2"></i>Xem Combo ngay
         </router-link>
       </div>
-    </section>
+    </section> -->
 
     <!-- Features Bar -->
     <section class="container py-5">
@@ -180,10 +180,10 @@ const seriesList = ref([])
 const flashSaleActive = ref(false)
 
 const features = [
-  { icon: '🚚', title: 'Giao hàng nhanh', desc: 'Toàn quốc trong 2-5 ngày' },
-  { icon: '🔄', title: 'Đổi trả dễ dàng', desc: 'Trong vòng 7 ngày' },
-  { icon: '💎', title: 'Chất lượng cao', desc: 'Vải tốt, may đẹp' },
-  { icon: '🎭', title: 'Thuê & Mua', desc: 'Linh hoạt theo nhu cầu' }
+  {  title: 'Giao hàng nhanh', desc: 'Toàn quốc trong 2-5 ngày' },
+  {  title: 'Đổi trả dễ dàng', desc: 'Trong vòng 7 ngày' },
+  {  title: 'Chất lượng cao', desc: 'Vải tốt, may đẹp' },
+  {  title: 'Thuê & Mua', desc: 'Linh hoạt theo nhu cầu' }
 ]
 
 const seriesIcon = (type) => {

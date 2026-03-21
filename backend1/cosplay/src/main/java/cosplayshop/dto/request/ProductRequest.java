@@ -34,6 +34,7 @@ public class ProductRequest {
 
     @Data
     public static class VariantRequest {
+        private Long id;  // null = tạo mới, có giá trị = cập nhật
         private String size;
         private String color;
         private String sku;

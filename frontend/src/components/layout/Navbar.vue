@@ -3,8 +3,8 @@
     <div class="container">
       <!-- Logo -->
       <router-link class="navbar-brand" to="/">
-        <span style="color: #e91e8c; font-weight: 900; font-size: 1.5rem;">⭐ CosPlay</span>
-        <span style="color: #fff; font-weight: 300;">Shop</span>
+        <span style="color: #e91e8c; font-weight: 900; font-size: 1.5rem;">OtakuCosPlay</span>
+  
       </router-link>
 
       <!-- Mobile toggle -->
@@ -37,11 +37,7 @@
               <i class="bi bi-grid me-1"></i>Sản phẩm
             </router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link text-white" to="/combos">
-              <i class="bi bi-bag-heart me-1"></i>Combo
-            </router-link>
-          </li>
+       
           <li class="nav-item">
             <router-link class="nav-link" to="/flash-sale"
               style="color: #ff4757; font-weight: 600;">

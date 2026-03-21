@@ -127,9 +127,9 @@
               <div class="small fw-semibold mb-2">Hình thức:</div>
               <div class="d-flex gap-2">
                 <button :class="['btn btn-sm rounded-pill',orderType==='SALE'?'btn-dark':'btn-outline-secondary']"
-                  @click="orderType='SALE'">🛍️ Mua</button>
+                  @click="orderType='SALE'"> Mua</button>
                 <button :class="['btn btn-sm rounded-pill',orderType==='RENTAL'?'btn-info text-white':'btn-outline-info']"
-                  @click="orderType='RENTAL'">📅 Thuê</button>
+                  @click="orderType='RENTAL'"> Thuê</button>
               </div>
             </div>
  

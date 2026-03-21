@@ -14,7 +14,7 @@
       </div>
 
       <div v-else-if="!notifications.length" class="text-center py-5">
-        <div style="font-size:4rem;">🔔</div>
+        
         <h6 class="text-muted mt-3">Chưa có thông báo nào</h6>
       </div>
 

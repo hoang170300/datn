@@ -61,7 +61,7 @@
                 <td>
                   <span class="badge rounded-pill"
                     :class="user.role === 'ROLE_ADMIN' ? 'bg-warning text-dark' : 'bg-light text-dark'">
-                    {{ user.role === 'ROLE_ADMIN' ? '👑 Admin' : '👤 User' }}
+                    {{ user.role === 'ROLE_ADMIN' ? ' Admin' : ' User' }}
                   </span>
                 </td>
                 <td class="small text-muted">{{ formatDate(user.createdAt) }}</td>

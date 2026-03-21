@@ -2,7 +2,6 @@
 <template>
   <div class="min-vh-100 d-flex align-items-center justify-content-center">
     <div class="text-center px-4">
-      <div class="mb-4" style="font-size:6rem;">🎉</div>
       <h2 class="fw-bold mb-2">Đặt hàng thành công!</h2>
       <p class="text-muted mb-1">Mã đơn hàng của bạn:</p>
       <div class="badge fs-5 px-4 py-2 mb-4"

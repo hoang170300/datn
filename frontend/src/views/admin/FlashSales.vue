@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="d-flex align-items-center justify-content-between mb-4">
       <div>
-        <h5 class="fw-bold mb-1">⚡ Quản lý Flash Sale</h5>
+        <h5 class="fw-bold mb-1">Quản lý Flash Sale</h5>
         <p class="text-muted small mb-0">Tạo & quản lý các đợt giảm giá nhanh</p>
       </div>
       <button class="btn rounded-pill fw-semibold" style="background:#e91e8c;color:#fff;"

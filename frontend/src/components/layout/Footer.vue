@@ -3,7 +3,7 @@
     <div class="container py-5">
       <div class="row g-4">
         <div class="col-lg-4">
-          <h5 style="color: #e91e8c; font-weight: 900;">⭐ CosPlay Shop</h5>
+          <h5 style="color: #e91e8c; font-weight: 900;">OtakuCosPlay</h5>
           <p class="small mt-2">Chuyên cung cấp trang phục cosplay chất lượng cao. Mua & thuê trang phục anime, game, phim.</p>
           <div class="d-flex gap-3 mt-3">
             <a href="#" class="text-white"><i class="bi bi-facebook fs-5"></i></a>
@@ -33,7 +33,7 @@
         <div class="col-lg-4">
           <h6 class="text-white mb-3">Liên hệ</h6>
           <ul class="list-unstyled small">
-            <li class="mb-2"><i class="bi bi-geo-alt me-2" style="color:#e91e8c;"></i>123 Đường Cosplay, Q.1, TP.HCM</li>
+            <li class="mb-2"><i class="bi bi-geo-alt me-2" style="color:#e91e8c;"></i>123 Đường Cosplay, Nam Từ Niêm, Hà Nội</li>
             <li class="mb-2"><i class="bi bi-telephone me-2" style="color:#e91e8c;"></i>0909 123 456</li>
             <li class="mb-2"><i class="bi bi-envelope me-2" style="color:#e91e8c;"></i>hello@cosplayshop.vn</li>
           </ul>

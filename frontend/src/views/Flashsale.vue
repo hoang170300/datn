@@ -2,7 +2,7 @@
     <div class="container py-5">
       <!-- Header -->
       <div class="text-center mb-5">
-        <h2 class="fw-black" style="color:#ff4757;">⚡ FLASH SALE</h2>
+        <h2 class="fw-black" style="color:#ff4757;"> FLASH SALE</h2>
         <p class="text-muted">Ưu đãi khủng - Số lượng có hạn - Mua ngay kẻo hết!</p>
       </div>
    
@@ -22,7 +22,6 @@
    
       <!-- No active sale -->
       <div v-else class="text-center py-5">
-        <div style="font-size:5rem;">⏰</div>
         <h5 class="text-muted mt-3">Hiện chưa có flash sale nào đang diễn ra</h5>
         <p class="text-muted">Hãy quay lại sau để không bỏ lỡ ưu đãi!</p>
         <router-link to="/products" class="btn rounded-pill mt-2 px-4"
@@ -33,7 +32,7 @@
    
       <!-- Products on sale (fallback: show hot products) -->
       <div v-if="products.length">
-        <h5 class="fw-bold mb-4">🔥 Sản phẩm trong Flash Sale</h5>
+        <h5 class="fw-bold mb-4"> Sản phẩm trong Flash Sale</h5>
         <div class="row g-3">
           <div v-for="product in products" :key="product.id" class="col-6 col-md-3">
             <ProductCard :product="product" />

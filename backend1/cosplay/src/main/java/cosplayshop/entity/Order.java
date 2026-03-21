@@ -24,7 +24,12 @@ public class Order {
 
     public enum PaymentStatus { PENDING, PAID, FAILED, REFUNDED }
 
-    public enum PaymentMethod { COD, BANK_TRANSFER, E_WALLET }
+    public enum PaymentMethod {
+        COD,                    // Tiền mặt khi nhận hàng
+        BANK_TRANSFER,          // Chuyển khoản khi nhận hàng (trả sau)
+        BANK_TRANSFER_PREPAID,  // Chuyển khoản trước khi giao
+        E_WALLET                // Ví điện tử (sandbox)
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

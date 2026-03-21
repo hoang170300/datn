@@ -99,14 +99,25 @@ public class OrderService {
         BigDecimal finalPrice = subtotal.subtract(discount).add(shippingFee).add(totalDeposit)
                 .max(BigDecimal.ZERO);
 
+        // Xác định paymentStatus theo phương thức
+        String pm = req.getPaymentMethod() != null ? req.getPaymentMethod() : "COD";
+        Order.PaymentStatus initPaymentStatus;
+        if ("E_WALLET".equals(pm)) {
+            // Sandbox đã confirm phía client → đánh dấu PAID ngay
+            initPaymentStatus = Order.PaymentStatus.PAID;
+        } else {
+            // COD, BANK_TRANSFER, BANK_TRANSFER_PREPAID → chờ thu/xác nhận
+            initPaymentStatus = Order.PaymentStatus.PENDING;
+        }
+
         // Tạo Order
         String orderNumber = "CS" + System.currentTimeMillis();
         Order order = Order.builder()
                 .orderNumber(orderNumber)
                 .user(user)
                 .status(Order.OrderStatus.PENDING)
-                .paymentMethod(Order.PaymentMethod.valueOf(
-                        req.getPaymentMethod() != null ? req.getPaymentMethod() : "COD"))
+                .paymentStatus(initPaymentStatus)
+                .paymentMethod(Order.PaymentMethod.valueOf(pm))
                 .subtotalPrice(subtotal)
                 .discountAmount(discount)
                 .shippingFee(shippingFee)
@@ -243,10 +254,33 @@ public class OrderService {
     public OrderResponse updateOrderStatus(Long orderId, String status) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Đơn hàng không tồn tại"));
-        order.setStatus(Order.OrderStatus.valueOf(status));
-        if (status.equals("DELIVERED") || status.equals("CONFIRMED")) {
-            order.setPaymentStatus(Order.PaymentStatus.PAID);
+
+        Order.OrderStatus newStatus = Order.OrderStatus.valueOf(status);
+        order.setStatus(newStatus);
+
+        // Cập nhật paymentStatus tự động theo logic thực tế:
+        switch (newStatus) {
+            case CONFIRMED:
+                // Chỉ BANK_TRANSFER_PREPAID mới qua bước CONFIRMED
+                // Admin xác nhận đã nhận tiền CK trước → PAID
+                order.setPaymentStatus(Order.PaymentStatus.PAID);
+                break;
+            case PROCESSING:
+                // COD/BANK_TRANSFER/E_WALLET bỏ qua CONFIRMED, chuyển thẳng sang PROCESSING
+                // E_WALLET đã PAID từ đầu, giữ nguyên
+                // COD/BANK_TRANSFER → vẫn PENDING cho đến khi DELIVERED
+                break;
+            case DELIVERED:
+                // Khi giao thành công:
+                // - COD: shipper thu tiền mặt → PAID
+                // - BANK_TRANSFER: shipper thu hộ → PAID
+                // - E_WALLET / BANK_TRANSFER_PREPAID: đã PAID từ trước, set lại cho chắc
+                order.setPaymentStatus(Order.PaymentStatus.PAID);
+                break;
+            default:
+                break;
         }
+
         Order saved = orderRepository.save(order);
         // Gửi thông báo cho user
         notificationService.sendOrderNotification(

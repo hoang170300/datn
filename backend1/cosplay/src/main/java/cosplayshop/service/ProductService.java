@@ -113,7 +113,8 @@ public class ProductService {
         } else {
             result = productRepository.findAllForAdmin(keyword, categoryId, pageable);
         }
-        return PageResponse.of(result.map(this::toResponse));
+        // Dùng toDetailResponse để trả variants (kèm stockQuantity) cho admin list
+        return PageResponse.of(result.map(this::toDetailResponse));
     }
 
     @Transactional
@@ -173,7 +174,50 @@ public class ProductService {
         if (req.getIsActive() != null) p.setIsActive(req.getIsActive());
         if (req.getImageUrls() != null && !req.getImageUrls().isEmpty())
             p.setPrimaryImageUrl(req.getImageUrls().get(0));
-        return toDetailResponse(productRepository.save(p));
+        productRepository.save(p);
+
+        // ── Cập nhật variants: MERGE (không xóa hết rồi tạo lại)
+        // → giữ stockQuantity hiện tại nếu không truyền lên
+        if (req.getVariants() != null && !req.getVariants().isEmpty()) {
+            java.util.List<ProductVariant> existing = variantRepository.findByProductIdAndIsActiveTrue(p.getId());
+            // Map id → variant hiện tại để tra cứu nhanh
+            java.util.Map<Long, ProductVariant> existingMap = new java.util.HashMap<>();
+            for (ProductVariant ev : existing) existingMap.put(ev.getId(), ev);
+
+            for (ProductRequest.VariantRequest vr : req.getVariants()) {
+                if (vr.getId() != null && existingMap.containsKey(vr.getId())) {
+                    // Cập nhật variant đã có
+                    ProductVariant ev = existingMap.get(vr.getId());
+                    if (vr.getSize()           != null) ev.setSize(vr.getSize());
+                    if (vr.getColor()          != null) ev.setColor(vr.getColor());
+                    if (vr.getPrice()          != null) ev.setPrice(vr.getPrice());
+                    if (vr.getStockQuantity()  != null) ev.setStockQuantity(vr.getStockQuantity());
+                    if (vr.getRentalQuantity() != null) ev.setRentalQuantity(vr.getRentalQuantity());
+                    if (vr.getSku() != null && !vr.getSku().isBlank()) ev.setSku(vr.getSku());
+                    variantRepository.save(ev);
+                    existingMap.remove(vr.getId()); // Đã xử lý
+                } else {
+                    // Tạo variant mới
+                    variantRepository.save(ProductVariant.builder()
+                            .product(p)
+                            .size(vr.getSize())
+                            .color(vr.getColor())
+                            .sku(vr.getSku() != null && !vr.getSku().isBlank() ? vr.getSku() : null)
+                            .price(vr.getPrice())
+                            .stockQuantity(vr.getStockQuantity() != null ? vr.getStockQuantity() : 0)
+                            .rentalQuantity(vr.getRentalQuantity() != null ? vr.getRentalQuantity() : 0)
+                            .isActive(true)
+                            .build());
+                }
+            }
+            // Các variant không có trong request → đánh dấu inactive (không xóa để giữ lịch sử)
+            for (ProductVariant gone : existingMap.values()) {
+                gone.setIsActive(false);
+                variantRepository.save(gone);
+            }
+        }
+
+        return toDetailResponse(productRepository.findById(p.getId()).orElseThrow());
     }
 
     @Transactional

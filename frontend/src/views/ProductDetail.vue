@@ -77,9 +77,16 @@
  
         <!-- Variant Selection -->
         <div v-if="product.variants?.length" class="mb-4">
-          <label class="form-label fw-semibold small mb-2">
-            Chọn Size: <span v-if="selectedVariant" class="text-primary">{{ selectedVariant.size }}</span>
-          </label>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <label class="form-label fw-semibold small mb-0">
+              Chọn Size: <span v-if="selectedVariant" class="text-primary">{{ selectedVariant.size }}</span>
+            </label>
+            <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none"
+              style="color:#e91e8c;font-size:0.8rem;"
+              @click="showSizeGuide=true">
+              <i class="bi bi-rulers me-1"></i>Hướng dẫn chọn size
+            </button>
+          </div>
           <div class="d-flex gap-2 flex-wrap">
             <button v-for="v in product.variants" :key="v.id"
               :class="['btn btn-sm position-relative',
@@ -119,9 +126,9 @@
           <label class="form-label fw-semibold small mb-2">Hình thức:</label>
           <div class="d-flex gap-2">
             <button :class="['btn btn-sm rounded-pill', orderType === 'SALE' ? 'btn-dark' : 'btn-outline-secondary']"
-              @click="orderType = 'SALE'">🛍️ Mua</button>
+              @click="orderType = 'SALE'"> Mua</button>
             <button :class="['btn btn-sm rounded-pill', orderType === 'RENTAL' ? 'btn-info text-white' : 'btn-outline-info']"
-              @click="orderType = 'RENTAL'">📅 Thuê</button>
+              @click="orderType = 'RENTAL'"> Thuê</button>
           </div>
         </div>
  
@@ -139,7 +146,7 @@
             </div>
           </div>
           <small v-if="rentalDays > 0" class="text-info mt-1 d-block">
-            📅 {{ rentalDays }} ngày · Tổng: {{ formatPrice(product.rentalPricePerDay * rentalDays) }}
+             {{ rentalDays }} ngày · Tổng: {{ formatPrice(product.rentalPricePerDay * rentalDays) }}
           </small>
         </div>
  
@@ -192,7 +199,7 @@
     <!-- Reviews Section -->
     <div class="mt-5 pt-4 border-top">
       <h5 class="fw-bold mb-4">
-        ⭐ Đánh giá sản phẩm
+         Đánh giá sản phẩm
         <span class="text-muted fw-normal small ms-2">({{ product.reviewCount || 0 }} đánh giá)</span>
       </h5>
  
@@ -270,6 +277,181 @@
       </div>
     </div>
   </div>
+ 
+<!-- ── Size Guide Modal ─────────────────────────────────────── -->
+<Teleport to="body">
+  <div v-if="showSizeGuide"
+    class="position-fixed d-flex align-items-center justify-content-center"
+    style="inset:0;background:rgba(0,0,0,0.55);z-index:3000;padding:16px;"
+    @click.self="showSizeGuide=false">
+    <div class="card border-0 shadow-lg" style="width:100%;max-width:680px;border-radius:20px;max-height:90vh;overflow-y:auto;">
+      <div class="card-body p-0">
+ 
+        <!-- Header -->
+        <div class="d-flex align-items-center justify-content-between p-4"
+          style="border-bottom:2px solid #e91e8c22;">
+          <div>
+            <h5 class="fw-bold mb-0" style="color:#1a1a2e;">
+              <i class="bi bi-rulers me-2" style="color:#e91e8c;"></i>Bảng hướng dẫn chọn size
+            </h5>
+            <small class="text-muted">Đo và so sánh với bảng để chọn size phù hợp nhất</small>
+          </div>
+          <button class="btn-close" @click="showSizeGuide=false"></button>
+        </div>
+ 
+        <div class="p-4">
+          <!-- Hướng dẫn đo -->
+          <div class="p-3 rounded-3 mb-4" style="background:#fff5f8;border:1px solid #e91e8c33;">
+            <div class="fw-semibold small mb-2" style="color:#e91e8c;">
+              <i class="bi bi-info-circle me-1"></i>Cách đo chuẩn
+            </div>
+            <div class="row g-2 small text-muted">
+              <div class="col-md-6">
+                <strong>Ngực (B):</strong> Đo vòng quanh phần ngực đầy nhất, thước nằm ngang
+              </div>
+              <div class="col-md-6">
+                <strong>Eo (W):</strong> Đo phần eo nhỏ nhất, thường 2-3cm trên rốn
+              </div>
+              <div class="col-md-6">
+                <strong>Hông (H):</strong> Đo vòng quanh phần hông rộng nhất
+              </div>
+              <div class="col-md-6">
+                <strong>Chiều cao:</strong> Đo từ đỉnh đầu đến gót chân, đứng thẳng
+              </div>
+            </div>
+          </div>
+ 
+          <!-- Tab Nam / Nữ -->
+          <div class="d-flex gap-2 mb-3">
+            <button :class="['btn btn-sm rounded-pill px-4', sizeTab==='female' ? 'text-white fw-semibold' : 'btn-outline-secondary']"
+              :style="sizeTab==='female' ? 'background:#e91e8c;' : ''"
+              @click="sizeTab='female'">
+               Nữ / Cosplay Nữ
+            </button>
+            <button :class="['btn btn-sm rounded-pill px-4', sizeTab==='male' ? 'text-white fw-semibold' : 'btn-outline-secondary']"
+              :style="sizeTab==='male' ? 'background:#1a1a2e;' : ''"
+              @click="sizeTab='male'">
+               Nam / Cosplay Nam
+            </button>
+          </div>
+ 
+          <!-- BẢNG SIZE NỮ -->
+          <div v-if="sizeTab==='female'">
+            <div class="fw-semibold mb-2 small" style="color:#e91e8c;">
+              <i class="bi bi-gender-female me-1"></i>Bảng size Nữ / Cosplay Nữ (đơn vị: cm)
+            </div>
+            <div class="table-responsive">
+              <table class="table table-bordered table-sm text-center" style="font-size:0.83rem;">
+                <thead>
+                  <tr style="background:#e91e8c;color:#fff;">
+                    <th>Size</th>
+                    <th>Chiều cao (cm)</th>
+                    <th>Cân nặng (kg)</th>
+                    <th>Ngực (cm)</th>
+                    <th>Eo (cm)</th>
+                    <th>Hông (cm)</th>
+                    <th>Phù hợp</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="r in sizeTableFemale" :key="r.size"
+                    :style="selectedVariant?.size===r.size ? 'background:#fff5f8;font-weight:600;' : ''">
+                    <td>
+                      <span class="badge rounded-pill"
+                        :style="selectedVariant?.size===r.size
+                          ? 'background:#e91e8c;color:#fff;'
+                          : 'background:#e91e8c22;color:#e91e8c;'">
+                        {{ r.size }}
+                      </span>
+                      <span v-if="selectedVariant?.size===r.size"
+                        class="ms-1 small" style="color:#e91e8c;">← Đã chọn</span>
+                    </td>
+                    <td>{{ r.height }}</td>
+                    <td>{{ r.weight }}</td>
+                    <td>{{ r.chest }}</td>
+                    <td>{{ r.waist }}</td>
+                    <td>{{ r.hip }}</td>
+                    <td class="text-muted" style="font-size:0.75rem;">{{ r.note }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="small text-muted mt-1">
+              <i class="bi bi-lightbulb me-1 text-warning"></i>
+              Nếu số đo nằm giữa 2 size, chọn size <strong>lớn hơn</strong> để thoải mái khi cosplay.
+            </div>
+          </div>
+ 
+          <!-- BẢNG SIZE NAM -->
+          <div v-if="sizeTab==='male'">
+            <div class="fw-semibold mb-2 small" style="color:#1a1a2e;">
+              <i class="bi bi-gender-male me-1"></i>Bảng size Nam / Cosplay Nam (đơn vị: cm)
+            </div>
+            <div class="table-responsive">
+              <table class="table table-bordered table-sm text-center" style="font-size:0.83rem;">
+                <thead>
+                  <tr style="background:#1a1a2e;color:#fff;">
+                    <th>Size</th>
+                    <th>Chiều cao (cm)</th>
+                    <th>Cân nặng (kg)</th>
+                    <th>Ngực (cm)</th>
+                    <th>Eo (cm)</th>
+                    <th>Hông (cm)</th>
+                    <th>Phù hợp</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="r in sizeTableMale" :key="r.size"
+                    :style="selectedVariant?.size===r.size ? 'background:#f0f4ff;font-weight:600;' : ''">
+                    <td>
+                      <span class="badge rounded-pill"
+                        :style="selectedVariant?.size===r.size
+                          ? 'background:#1a1a2e;color:#fff;'
+                          : 'background:#1a1a2e22;color:#1a1a2e;'">
+                        {{ r.size }}
+                      </span>
+                      <span v-if="selectedVariant?.size===r.size"
+                        class="ms-1 small" style="color:#1a1a2e;">← Đã chọn</span>
+                    </td>
+                    <td>{{ r.height }}</td>
+                    <td>{{ r.weight }}</td>
+                    <td>{{ r.chest }}</td>
+                    <td>{{ r.waist }}</td>
+                    <td>{{ r.hip }}</td>
+                    <td class="text-muted" style="font-size:0.75rem;">{{ r.note }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="small text-muted mt-1">
+              <i class="bi bi-lightbulb me-1 text-warning"></i>
+              Cosplay có phụ kiện áo giáp/đệm vai → chọn size <strong>vừa khít hoặc nhỏ hơn 1 size</strong>.
+            </div>
+          </div>
+ 
+          <!-- Lưu ý chung -->
+          <div class="mt-3 p-3 rounded-3 small" style="background:#f8f9fa;">
+            <div class="fw-semibold mb-2"><i class="bi bi-exclamation-circle me-1 text-warning"></i>Lưu ý</div>
+            <div class="text-muted" style="line-height:1.7;">
+              • Kích thước trên là số đo cơ thể, không phải số đo quần áo.<br>
+              • Trang phục cosplay thường được may theo size chuẩn quốc tế — có thể chênh ±2cm.<br>
+              • Nếu mặc kèm nhiều lớp (quần lót, áo trong) → cộng thêm 3-5cm vào số đo.<br>
+              • Liên hệ shop nếu cần tư vấn thêm: <strong style="color:#e91e8c;">0909 123 456</strong>
+            </div>
+          </div>
+ 
+          <div class="text-center mt-3">
+            <button class="btn rounded-pill px-5 fw-semibold"
+              style="background:#e91e8c;color:#fff;"
+              @click="showSizeGuide=false">
+              Đã hiểu, đóng lại
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Teleport>
 </template>
  
 <script setup>
@@ -349,7 +531,7 @@ const toggleFav = async () => {
   try {
     const res = await productApi.toggleFavorite(product.value.id)
     isFav.value = res.data.data
-    toast.success(isFav.value ? 'Đã thêm vào yêu thích ❤️' : 'Đã bỏ yêu thích')
+    toast.success(isFav.value ? 'Đã thêm vào yêu thích ' : 'Đã bỏ yêu thích')
   } catch (e) {}
 }
  
@@ -401,6 +583,31 @@ watch(() => route.params.slug, async (slug) => {
     }
   }
 }, { immediate: true })
+ 
+// ── Size Guide ─────────────────────────────────────────
+const showSizeGuide = ref(false)
+const sizeTab       = ref('female')
+ 
+const sizeTableFemale = [
+  { size:'XS',   height:'148-153', weight:'40-45',  chest:'76-80',   waist:'58-62',  hip:'80-84',   note:'Nhỏ nhắn, gầy' },
+  { size:'S',    height:'153-158', weight:'45-50',  chest:'80-84',   waist:'62-66',  hip:'84-88',   note:'Nhỏ, cân đối' },
+  { size:'M',    height:'158-163', weight:'50-55',  chest:'84-88',   waist:'66-70',  hip:'88-92',   note:'Trung bình' },
+  { size:'L',    height:'163-168', weight:'55-60',  chest:'88-92',   waist:'70-74',  hip:'92-96',   note:'Hơi đầy đặn' },
+  { size:'XL',   height:'168-173', weight:'60-67',  chest:'92-96',   waist:'74-78',  hip:'96-100',  note:'Đầy đặn' },
+  { size:'2XL',  height:'170-175', weight:'67-75',  chest:'96-102',  waist:'78-84',  hip:'100-106', note:'To, cao' },
+  { size:'FREE', height:'155-170', weight:'45-60',  chest:'80-92',   waist:'62-74',  hip:'84-96',   note:'Đa số vóc dáng' },
+]
+ 
+const sizeTableMale = [
+  { size:'S',    height:'163-168', weight:'53-58',  chest:'84-88',   waist:'70-74',  hip:'86-90',   note:'Gầy, thon' },
+  { size:'M',    height:'168-173', weight:'58-65',  chest:'88-92',   waist:'74-78',  hip:'90-94',   note:'Trung bình' },
+  { size:'L',    height:'173-178', weight:'65-72',  chest:'92-96',   waist:'78-82',  hip:'94-98',   note:'Khỏe, vừa' },
+  { size:'XL',   height:'175-180', weight:'72-80',  chest:'96-102',  waist:'82-88',  hip:'98-102',  note:'To, cao' },
+  { size:'2XL',  height:'178-183', weight:'80-90',  chest:'102-108', waist:'88-96',  hip:'102-108', note:'Cao to' },
+  { size:'3XL',  height:'180-186', weight:'90-100', chest:'108-116', waist:'96-104', hip:'108-116', note:'Rất to, cao' },
+  { size:'FREE', height:'165-180', weight:'55-75',  chest:'84-100',  waist:'68-86',  hip:'86-100',  note:'Đa số vóc dáng nam' },
+]
+ 
 </script>
  
 <style scoped>

@@ -40,7 +40,7 @@
                     · x{{ item.quantity }}
                     <span class="badge ms-2"
                       :class="item.itemType === 'RENTAL' ? 'bg-info text-dark' : 'bg-primary'">
-                      {{ item.itemType === 'RENTAL' ? '📅 Thuê' : '🛍️ Mua' }}
+                      {{ item.itemType === 'RENTAL' ? ' Thuê' : ' Mua' }}
                     </span>
                   </div>
                   <div v-if="item.rentalStartDate" class="small text-info">

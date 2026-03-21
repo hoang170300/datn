@@ -1,17 +1,17 @@
 import axios from 'axios'
- 
+
 const api = axios.create({
   baseURL: '/api',
   timeout: 15000,
   headers: { 'Content-Type': 'application/json' }
 })
- 
+
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('token')
   if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 }, error => Promise.reject(error))
- 
+
 api.interceptors.response.use(
   response => response,
   error => {
@@ -23,16 +23,16 @@ api.interceptors.response.use(
     return Promise.reject(error)
   }
 )
- 
+
 export default api
- 
+
 export const authApi = {
   login:         (data)           => api.post('/auth/login', data),
   register:      (data)           => api.post('/auth/register', data),
   forgotPassword:(email)          => api.post(`/auth/forgot-password?email=${email}`),
   resetPassword: (token, newPass) => api.post(`/auth/reset-password?token=${token}&newPassword=${newPass}`)
 }
- 
+
 export const productApi = {
   getProducts:            (params)                 => api.get('/products', { params }),
   getProductDetail:       (slug)                   => api.get(`/products/${slug}`),
@@ -52,6 +52,7 @@ export const productApi = {
   isFavorite:     (productId) => api.get(`/favorites/check/${productId}`),
   admin: {
     getProducts:    (params)     => api.get('/admin/products', { params }),
+    getProductById: (id)         => api.get(`/admin/products/${id}`),
     createProduct:  (data)       => api.post('/admin/products', data),
     updateProduct:  (id, data)   => api.put(`/admin/products/${id}`, data),
     toggleStatus:   (id)         => api.patch(`/admin/products/${id}/toggle-status`),
@@ -65,7 +66,7 @@ export const productApi = {
     toggleSeries:   (id)         => api.patch(`/admin/series/${id}/toggle`)
   }
 }
- 
+
 export const cartApi = {
   getCart:        ()            => api.get('/cart'),
   addItem:        (data)        => api.post('/cart/items', data),
@@ -73,7 +74,7 @@ export const cartApi = {
   removeItem:     (itemId)      => api.delete(`/cart/items/${itemId}`),
   clearCart:      ()            => api.delete('/cart')
 }
- 
+
 export const orderApi = {
   createOrder:     (data)         => api.post('/orders', data),
   getMyOrders:     (params)       => api.get('/orders', { params }),
@@ -86,7 +87,7 @@ export const orderApi = {
     updateStatus: (id, status) => api.patch(`/admin/orders/${id}/status?status=${status}`)
   }
 }
- 
+
 export const userApi = {
   getProfile:           ()       => api.get('/users/profile'),
   updateProfile:        (data)   => api.put('/users/profile', data),

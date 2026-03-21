@@ -9,7 +9,7 @@
         <div class="col-md-5">
           <div class="text-center mb-4">
             <router-link to="/" class="text-decoration-none">
-              <h2 style="color:#e91e8c;font-weight:900;">⭐ CosPlay Shop</h2>
+              <h2 style="color:#e91e8c;font-weight:900;">OtakuCosPlay</h2>
             </router-link>
           </div>
           <div class="card border-0 shadow-lg" style="border-radius:20px;overflow:hidden;">
@@ -87,7 +87,7 @@ const handleLogin = async () => {
   error.value = ''
   try {
     await authStore.login(form)
-    toast.success('Đăng nhập thành công! 🎉')
+    toast.success('Đăng nhập thành công! ')
     const redirect = route.query.redirect || '/'
     router.push(redirect)
   } catch (e) {
